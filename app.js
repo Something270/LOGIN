@@ -3,20 +3,18 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
 const passport = require('passport');
 const session = require("express-session");
 
-const {sequelize} = require('./config/db');
-const {User} = require('./model/user');
-
-require('./config/auth');
-require('./config/associations');
-
- //sequelize.sync({force: true});
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+
+const {sequelize} = require('./config/db');
+const {User} = require('./models/user');
+// sequelize.sync();
+
+require('./config/auth');
 
 var app = express();
 
@@ -34,7 +32,6 @@ app.use(session({
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 //Configure passport
 app.use(passport.initialize());
@@ -58,6 +55,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
 
 module.exports = app;
